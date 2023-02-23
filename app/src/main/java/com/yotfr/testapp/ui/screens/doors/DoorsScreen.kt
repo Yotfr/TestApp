@@ -20,13 +20,14 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.yotfr.testapp.R
 import com.yotfr.testapp.ui.screens.doors.event.DoorsEvent
 import com.yotfr.testapp.ui.screens.doors.model.DoorUi
+import com.yotfr.testapp.ui.util.elevation
+import com.yotfr.testapp.ui.util.spacing
 import de.charlex.compose.RevealDirection
 import de.charlex.compose.RevealSwipe
 
@@ -75,7 +76,7 @@ fun DoorsScreen(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
-                .padding(21.dp)
+                .padding(MaterialTheme.spacing.large)
         ) {
             state?.let {
                 items(it.doors) { door ->
@@ -83,7 +84,9 @@ fun DoorsScreen(
                         door = door,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 12.dp),
+                            .padding(
+                                bottom = MaterialTheme.spacing.medium
+                            ),
                         onFavorite = {
                             viewModel.onEvent(
                                 event = DoorsEvent.FavoriteClicked(
@@ -124,13 +127,13 @@ fun EditNameDialog(
     }) {
         Surface(
             shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+            color = MaterialTheme.colorScheme.surfaceColorAtElevation(MaterialTheme.elevation.extraSmall)
         ) {
             Box(
                 contentAlignment = Alignment.Center
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(MaterialTheme.spacing.standard),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     TextField(
@@ -202,7 +205,10 @@ fun DoorsItem(
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
-            elevation = CardDefaults.cardElevation(3.dp)
+            elevation = CardDefaults.cardElevation(MaterialTheme.elevation.medium),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
             if (door.snapshot != null) {
                 Box(modifier = Modifier.fillMaxWidth()) {
@@ -215,7 +221,10 @@ fun DoorsItem(
                     if (door.favorites) {
                         Icon(
                             modifier = Modifier.align(Alignment.TopEnd)
-                                .padding(top = 8.dp, end = 8.dp),
+                                .padding(
+                                    top = MaterialTheme.spacing.small,
+                                    end = MaterialTheme.spacing.small
+                                ),
                             painter = favoriteCamIcon,
                             contentDescription = "favorite",
                             tint = Color.Unspecified
@@ -228,14 +237,14 @@ fun DoorsItem(
                     .fillMaxWidth()
                     .height(72.dp)
                     .padding(
-                        start = 16.dp,
-                        end = 24.dp
+                        start = MaterialTheme.spacing.standard,
+                        end = MaterialTheme.spacing.large
                     ),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    fontSize = 17.sp,
+                    style = MaterialTheme.typography.titleMedium,
                     text = door.name
                 )
                 Icon(

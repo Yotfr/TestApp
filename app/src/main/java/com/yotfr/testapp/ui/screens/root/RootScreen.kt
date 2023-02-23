@@ -2,15 +2,14 @@
 
 package com.yotfr.testapp.ui.screens.root
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.zIndex
 import com.google.accompanist.pager.*
+import com.yotfr.testapp.R
 import com.yotfr.testapp.ui.navigation.TabScreens
 
 @Composable
@@ -27,7 +26,8 @@ fun RootScreen() {
         }
     ) {
         Column(
-            modifier = Modifier.padding(it)
+            modifier = Modifier.fillMaxSize()
+                .padding(it)
         ) {
             Tabs(
                 tabs = tabs,
@@ -49,8 +49,8 @@ fun TopBar() {
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "My home",
-                fontSize = 21.sp
+                text = stringResource(id = R.string.my_house),
+                style = MaterialTheme.typography.titleLarge
             )
         }
     )
@@ -60,27 +60,22 @@ fun TopBar() {
 fun Tabs(tabs: List<TabScreens>, selectedIndex: Int, onTabClicked: (index: Int) -> Unit) {
     TabRow(
         modifier = Modifier.fillMaxWidth(),
-        selectedTabIndex = selectedIndex,
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                modifier = Modifier.tabIndicatorOffset(
-                    tabPositions[selectedIndex]
-                )
-            )
-        }
+        selectedTabIndex = selectedIndex
     ) {
         tabs.forEachIndexed { index, tabScreens ->
             Tab(
                 text = {
                     Text(
-                        text = tabScreens.title,
-                        fontSize = 17.sp
+                        text = stringResource(id = tabScreens.title),
+                        style = MaterialTheme.typography.titleMedium
                     )
                 },
                 selected = selectedIndex == index,
                 onClick = {
                     onTabClicked(index)
-                }
+                },
+                selectedContentColor = MaterialTheme.colorScheme.onBackground,
+                unselectedContentColor = MaterialTheme.colorScheme.onBackground
             )
         }
     }
@@ -88,5 +83,7 @@ fun Tabs(tabs: List<TabScreens>, selectedIndex: Int, onTabClicked: (index: Int) 
 
 @Composable
 fun TabsContent(tabs: List<TabScreens>, selectedIndex: Int) {
-    tabs[selectedIndex].screen()
+    Box(modifier = Modifier.zIndex(-1f)) {
+        tabs[selectedIndex].screen()
+    }
 }

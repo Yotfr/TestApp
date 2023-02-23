@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TestApp</string>
+
+    <string name="cameras">Камеры</string>
+    <string name="doors">Двери</string>
+    <string name="my_house">Мой дом</string>
+</resources>

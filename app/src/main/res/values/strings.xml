@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TestApp</string>
+
+    <string name="cameras">Cameras</string>
+    <string name="doors">Doors</string>
+    <string name="my_house">My house</string>
 </resources>

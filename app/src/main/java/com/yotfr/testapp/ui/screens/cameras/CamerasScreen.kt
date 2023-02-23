@@ -2,7 +2,6 @@
 
 package com.yotfr.testapp.ui.screens.cameras
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,12 +20,13 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.yotfr.testapp.R
 import com.yotfr.testapp.ui.screens.cameras.event.CamerasEvent
 import com.yotfr.testapp.ui.screens.cameras.model.CameraUi
+import com.yotfr.testapp.ui.util.elevation
+import com.yotfr.testapp.ui.util.spacing
 import de.charlex.compose.RevealDirection
 import de.charlex.compose.RevealSwipe
 
@@ -50,14 +50,16 @@ fun CameraScreen(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
-                .padding(21.dp)
+                .padding(MaterialTheme.spacing.large)
         ) {
             state?.rooms?.forEach {
                 item {
                     RoomHeader(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 12.dp),
+                            .padding(
+                                bottom = MaterialTheme.spacing.medium
+                            ),
                         roomName = it.name
                     )
                 }
@@ -65,7 +67,9 @@ fun CameraScreen(
                     CameraItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 12.dp),
+                            .padding(
+                                bottom = MaterialTheme.spacing.medium
+                            ),
                         camera = camera,
                         onFavorite = {
                             viewModel.onEvent(
@@ -89,7 +93,6 @@ fun CameraScreen(
     }
 }
 
-@SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun CameraItem(
     camera: CameraUi,
@@ -121,7 +124,10 @@ fun CameraItem(
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
-            elevation = CardDefaults.cardElevation(3.dp)
+            elevation = CardDefaults.cardElevation(MaterialTheme.elevation.medium),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 AsyncImage(
@@ -133,7 +139,10 @@ fun CameraItem(
                 if (camera.isFavorite) {
                     Icon(
                         modifier = Modifier.align(Alignment.TopEnd)
-                            .padding(top = 8.dp, end = 8.dp),
+                            .padding(
+                                top = MaterialTheme.spacing.small,
+                                end = MaterialTheme.spacing.small
+                            ),
                         painter = favoriteCamIcon,
                         contentDescription = "favorite",
                         tint = Color.Unspecified
@@ -142,7 +151,10 @@ fun CameraItem(
                 if (camera.rec) {
                     Icon(
                         modifier = Modifier.align(Alignment.TopStart)
-                            .padding(top = 8.dp, start = 8.dp),
+                            .padding(
+                                top = MaterialTheme.spacing.small,
+                                start = MaterialTheme.spacing.small
+                            ),
                         painter = recIcon,
                         contentDescription = "rec",
                         tint = Color.Unspecified
@@ -154,13 +166,13 @@ fun CameraItem(
                     .fillMaxWidth()
                     .height(72.dp)
                     .padding(
-                        start = 16.dp,
-                        end = 24.dp
+                        start = MaterialTheme.spacing.standard,
+                        end = MaterialTheme.spacing.large
                     ),
                 contentAlignment = Alignment.CenterStart
             ) {
                 Text(
-                    fontSize = 17.sp,
+                    style = MaterialTheme.typography.titleMedium,
                     text = camera.name
                 )
             }
@@ -179,7 +191,7 @@ fun RoomHeader(
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = roomName,
-            fontSize = 21.sp
+            style = MaterialTheme.typography.headlineSmall
         )
     }
 }
