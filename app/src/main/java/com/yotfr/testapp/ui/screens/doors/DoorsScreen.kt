@@ -1,14 +1,15 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package com.yotfr.testapp.ui.screens.cameras
+package com.yotfr.testapp.ui.screens.doors
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -23,12 +24,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.yotfr.testapp.ui.screens.cameras.event.CamerasEvent
-import com.yotfr.testapp.ui.screens.cameras.model.CameraUi
+import com.yotfr.testapp.ui.screens.doors.event.DoorsEvent
+import com.yotfr.testapp.ui.screens.doors.model.DoorUi
 
 @Composable
-fun CameraScreen(
-    viewModel: CamerasViewModel = hiltViewModel()
+fun DoorsScreen(
+    viewModel: DoorsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.observeAsState()
 
@@ -36,7 +37,7 @@ fun CameraScreen(
         refreshing = state?.isLoading ?: false,
         onRefresh = {
             viewModel.onEvent(
-                CamerasEvent.Swiped
+                DoorsEvent.Swiped
             )
         }
     )
@@ -45,23 +46,12 @@ fun CameraScreen(
         modifier = Modifier.pullRefresh(state = pullRefreshState)
     ) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            state?.rooms?.forEach {
-                item {
-                    RoomHeader(
+            state?.let {
+                items(it.doors) { door ->
+                    DoorsItem(
+                        door = door,
                         modifier = Modifier.fillMaxWidth()
-                            .padding(
-                                top = 16.dp,
-                                start = 16.dp,
-                                end = 16.dp
-                            ),
-                        roomName = it.name
-                    )
-                }
-                items(it.cameras) { camera ->
-                    CameraItem(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(16.dp),
-                        camera = camera
+                            .padding(16.dp)
                     )
                 }
             }
@@ -75,8 +65,8 @@ fun CameraScreen(
 }
 
 @Composable
-fun CameraItem(
-    camera: CameraUi,
+fun DoorsItem(
+    door: DoorUi,
     modifier: Modifier
 ) {
     Box(
@@ -86,32 +76,27 @@ fun CameraItem(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp)
         ) {
-            AsyncImage(
-                modifier = Modifier.fillMaxWidth(),
-                model = camera.snapshot,
-                contentDescription = "camera",
-                contentScale = ContentScale.FillWidth
-            )
-            Text(
+            if (door.snapshot != null) {
+                AsyncImage(
+                    modifier = Modifier.fillMaxWidth(),
+                    model = door.snapshot,
+                    contentDescription = "camera",
+                    contentScale = ContentScale.FillWidth
+                )
+            }
+            Row(
                 modifier = Modifier.fillMaxWidth()
                     .padding(16.dp),
-                text = camera.name
-            )
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = door.name
+                )
+                Icon(
+                    imageVector = Icons.Outlined.Lock,
+                    contentDescription = "Lock state"
+                )
+            }
         }
-    }
-}
-
-@Composable
-fun RoomHeader(
-    roomName: String,
-    modifier: Modifier
-) {
-    Box(
-        modifier = modifier
-    ) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = roomName
-        )
     }
 }

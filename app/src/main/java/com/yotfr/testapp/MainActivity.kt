@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.yotfr.testapp.ui.screens.cameras.CameraScreen
+import com.yotfr.testapp.ui.screens.doors.DoorsScreen
 import com.yotfr.testapp.ui.theme.TestAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CameraScreen()
+                    DoorsScreen()
                 }
             }
         }

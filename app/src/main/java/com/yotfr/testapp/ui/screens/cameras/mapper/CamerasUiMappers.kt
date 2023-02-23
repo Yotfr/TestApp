@@ -1,4 +1,4 @@
-package com.yotfr.testapp.ui.screens.cameras
+package com.yotfr.testapp.ui.screens.cameras.mapper
 
 import com.yotfr.testapp.data.datasource.local.model.cameras.CameraRealm
 import com.yotfr.testapp.data.datasource.local.model.cameras.CamerasDataRealm

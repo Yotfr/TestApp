@@ -1,4 +1,4 @@
-package com.yotfr.testapp.ui.screens.cameras
+package com.yotfr.testapp.ui.screens.cameras.event
 
 sealed interface CamerasEvent {
     object Swiped : CamerasEvent

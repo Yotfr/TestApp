@@ -33,6 +33,7 @@ class DoorsRepositoryImpl @Inject constructor(
                     )
                 )
             } catch (e: Exception) {
+                throw e
                 e.printStackTrace()
                 emit(
                     Response.Exception(

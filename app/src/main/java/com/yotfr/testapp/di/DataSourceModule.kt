@@ -5,6 +5,7 @@ import com.yotfr.testapp.data.datasource.local.dao.doors.DoorsDao
 import com.yotfr.testapp.data.datasource.local.model.cameras.CameraRealm
 import com.yotfr.testapp.data.datasource.local.model.cameras.CamerasDataRealm
 import com.yotfr.testapp.data.datasource.local.model.doors.DoorRealm
+import com.yotfr.testapp.data.datasource.local.model.doors.DoorsDataRealm
 import com.yotfr.testapp.data.datasource.remote.CamerasApi
 import com.yotfr.testapp.data.datasource.remote.DoorsApi
 import dagger.Module
@@ -28,7 +29,8 @@ class DataSourceModule {
             schema = setOf(
                 CameraRealm::class,
                 CamerasDataRealm::class,
-                DoorRealm::class
+                DoorRealm::class,
+                DoorsDataRealm::class
             )
         )
             .compactOnLaunch()

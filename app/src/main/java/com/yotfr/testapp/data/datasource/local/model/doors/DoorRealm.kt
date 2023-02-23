@@ -9,5 +9,5 @@ class DoorRealm : RealmObject {
     var favorites: Boolean = false
     var name: String = ""
     var room: String? = null
-    var snapshot: String = ""
+    var snapshot: String? = null
 }

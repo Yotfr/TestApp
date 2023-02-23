@@ -1,47 +1,47 @@
-package com.yotfr.testapp.ui.screens.cameras
+package com.yotfr.testapp.ui.screens.doors
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yotfr.testapp.data.repository.cameras.CamerasRepository
+import com.yotfr.testapp.data.repository.doors.DoorsRepository
 import com.yotfr.testapp.data.util.Response
-import com.yotfr.testapp.ui.screens.cameras.event.CamerasEvent
-import com.yotfr.testapp.ui.screens.cameras.mapper.toRooms
-import com.yotfr.testapp.ui.screens.cameras.model.CamerasState
+import com.yotfr.testapp.ui.screens.doors.event.DoorsEvent
+import com.yotfr.testapp.ui.screens.doors.mapper.toDoorUi
+import com.yotfr.testapp.ui.screens.doors.model.DoorsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CamerasViewModel @Inject constructor(
-    private val camerasRepository: CamerasRepository
+class DoorsViewModel @Inject constructor(
+    private val doorsRepository: DoorsRepository
 ) : ViewModel() {
 
-    private val _state = MutableLiveData(CamerasState())
-    val state: LiveData<CamerasState> = _state
+    private val _state = MutableLiveData(DoorsState())
+    val state: LiveData<DoorsState> = _state
 
     init {
         viewModelScope.launch {
-            getCamerasData()
+            getDoorsData()
         }
     }
 
-    fun onEvent(event: CamerasEvent) {
-        when (event) {
-            CamerasEvent.Swiped -> {
+    fun onEvent(event: DoorsEvent) {
+        when(event) {
+            DoorsEvent.Swiped -> {
                 viewModelScope.launch {
-                    getCamerasData()
+                    getDoorsData()
                 }
             }
         }
     }
 
-    private suspend fun getCamerasData() {
-        camerasRepository.getCamerasData().collectLatest { response ->
-            Log.d("TESTRESPONSE", "response -> $response")
+    private suspend fun getDoorsData() {
+        doorsRepository.getDoorsData().collectLatest { response ->
+            Log.d("TESTTT","response -> $response")
             when (response) {
                 is Response.Loading -> {
                     _state.value = _state.value?.copy(
@@ -49,15 +49,13 @@ class CamerasViewModel @Inject constructor(
                     )
                 }
                 is Response.Success -> {
+                    Log.d("TESTTT","response data -> ${response.data}")
                     _state.value = _state.value?.copy(
                         isLoading = false,
-                        rooms = response.data?.toRooms() ?: throw IllegalArgumentException(
-                            "data cannot be null if response is Response.Success"
-                        )
+                        doors = response.data?.doorRealms?.map { it.toDoorUi() } ?: emptyList()
                     )
                 }
                 is Response.Exception -> {
-                    Log.d("TEST", "error")
                     _state.value = _state.value?.copy(
                         isLoading = false
                     )
@@ -65,4 +63,5 @@ class CamerasViewModel @Inject constructor(
             }
         }
     }
+
 }

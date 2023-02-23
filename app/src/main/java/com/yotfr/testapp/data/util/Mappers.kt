@@ -8,9 +8,7 @@ import com.yotfr.testapp.data.datasource.remote.dto.cameras.CameraDto
 import com.yotfr.testapp.data.datasource.remote.dto.cameras.CamerasDto
 import com.yotfr.testapp.data.datasource.remote.dto.doors.DoorsDataDto
 import com.yotfr.testapp.data.datasource.remote.dto.doors.DoorsDto
-import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.ext.toRealmList
-import io.realm.kotlin.types.RealmList
 
 fun CamerasDto.toCamerasDataRealm(): CamerasDataRealm {
     return CamerasDataRealm().apply {

@@ -18,7 +18,7 @@ class DoorsDao(
             delete(camerasDataQuery)
         }
     }
-    fun getDoorsData(): Flow<DoorsDataRealm> {
-        return realm.query<DoorsDataRealm>().asFlow().map { it.list.first() }
+    fun getDoorsData(): Flow<DoorsDataRealm?> {
+        return realm.query<DoorsDataRealm>().asFlow().map { it.list.firstOrNull() }
     }
 }
