@@ -56,6 +56,10 @@ dependencies {
     def nav_version = "2.5.3"
     def hilt_version = "2.44.1"
 
+    // Tabs pager
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
+
     // Coil
     implementation "io.coil-kt:coil-compose:2.2.2"
 
