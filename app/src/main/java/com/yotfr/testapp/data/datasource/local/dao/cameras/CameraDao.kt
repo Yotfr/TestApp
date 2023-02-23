@@ -18,7 +18,7 @@ class CameraDao(
             delete(camerasDataRealmQuery)
         }
     }
-    fun getCamerasData(): Flow<CamerasDataRealm> {
-        return realm.query<CamerasDataRealm>().asFlow().map { it.list.first() }
+    fun getCamerasData(): Flow<CamerasDataRealm?> {
+        return realm.query<CamerasDataRealm>().asFlow().map { it.list.firstOrNull() }
     }
 }

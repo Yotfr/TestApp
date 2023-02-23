@@ -5,6 +5,6 @@ data class CameraDto(
     val id: Int,
     val name: String,
     val rec: Boolean,
-    val room: String,
+    val room: String?,
     val snapshot: String
 )

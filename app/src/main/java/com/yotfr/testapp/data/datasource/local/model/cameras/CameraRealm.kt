@@ -8,6 +8,6 @@ class CameraRealm : RealmObject {
     var id: Int = 0
     var name: String = ""
     var rec: Boolean = false
-    var room: String = ""
+    var room: String? = null
     var snapshot: String = ""
 }

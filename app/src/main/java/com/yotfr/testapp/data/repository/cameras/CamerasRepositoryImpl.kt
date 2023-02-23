@@ -1,5 +1,6 @@
 package com.yotfr.testapp.data.repository.cameras
 
+import android.util.Log
 import com.yotfr.testapp.data.datasource.local.dao.cameras.CameraDao
 import com.yotfr.testapp.data.datasource.local.model.cameras.CamerasDataRealm
 import com.yotfr.testapp.data.datasource.remote.CamerasApi
@@ -16,10 +17,10 @@ class CamerasRepositoryImpl @Inject constructor(
 ) : CamerasRepository {
 
     override fun getCamerasData(): Flow<Response<CamerasDataRealm>> = flow {
+        emit(Response.Loading())
         val camerasDataCache = camerasDao.getCamerasData().firstOrNull()
         if (camerasDataCache == null) {
             try {
-                emit(Response.Loading())
                 val fetchedCameraData = camerasApi.fetchCameras()
                 camerasDao.deleteCamerasData()
                 camerasDao.insertCamerasData(fetchedCameraData.toCamerasDataRealm())

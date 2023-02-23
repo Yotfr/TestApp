@@ -8,14 +8,16 @@ import com.yotfr.testapp.data.datasource.remote.dto.cameras.CameraDto
 import com.yotfr.testapp.data.datasource.remote.dto.cameras.CamerasDto
 import com.yotfr.testapp.data.datasource.remote.dto.doors.DoorsDataDto
 import com.yotfr.testapp.data.datasource.remote.dto.doors.DoorsDto
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.ext.toRealmList
 import io.realm.kotlin.types.RealmList
 
 fun CamerasDto.toCamerasDataRealm(): CamerasDataRealm {
     return CamerasDataRealm().apply {
         cameraRealms = this@toCamerasDataRealm.camerasDataDTO.cameraDtos.map {
             it.toCameraRealm()
-        } as RealmList<CameraRealm>
-        room = this@toCamerasDataRealm.camerasDataDTO.room as RealmList<String>
+        }.toRealmList()
+        room = this@toCamerasDataRealm.camerasDataDTO.room.toRealmList()
     }
 }
 
@@ -33,7 +35,7 @@ fun DoorsDto.toDoorsDataRealm(): DoorsDataRealm {
     return DoorsDataRealm().apply {
         doorRealms = this@toDoorsDataRealm.data.map {
             it.toDoorRealm()
-        } as RealmList<DoorRealm>
+        }.toRealmList()
     }
 }
 

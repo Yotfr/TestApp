@@ -8,6 +8,6 @@ class DoorRealm : RealmObject {
     var id: Int = 0
     var favorites: Boolean = false
     var name: String = ""
-    var room: String = ""
+    var room: String? = null
     var snapshot: String = ""
 }
