@@ -9,5 +9,6 @@ class CameraRealm : RealmObject {
     var name: String = ""
     var rec: Boolean = false
     var room: String? = null
+    var favorites: Boolean = false
     var snapshot: String = ""
 }

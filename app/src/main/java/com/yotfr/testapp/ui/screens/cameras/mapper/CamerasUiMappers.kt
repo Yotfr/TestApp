@@ -38,6 +38,18 @@ fun CameraRealm.toCameraUi(): CameraUi {
         name = this.name,
         rec = this.rec,
         room = this.room,
-        snapshot = this.snapshot
+        snapshot = this.snapshot,
+        isFavorite = this.favorites
     )
+}
+
+fun CameraUi.toCameraRealm() : CameraRealm {
+    return CameraRealm().apply {
+        id = this@toCameraRealm.id
+        name = this@toCameraRealm.name
+        room = this@toCameraRealm.room
+        rec = this@toCameraRealm.rec
+        favorites = this@toCameraRealm.isFavorite
+        snapshot = this@toCameraRealm.snapshot
+    }
 }

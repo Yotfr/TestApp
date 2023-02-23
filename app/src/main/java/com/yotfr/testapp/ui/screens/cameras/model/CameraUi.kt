@@ -5,5 +5,6 @@ data class CameraUi(
     val name: String,
     val rec: Boolean,
     val room: String?,
-    val snapshot: String
+    val snapshot: String,
+    val isFavorite: Boolean
 )

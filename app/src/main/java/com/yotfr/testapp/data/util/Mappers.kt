@@ -25,6 +25,7 @@ fun CameraDto.toCameraRealm(): CameraRealm {
         name = this@toCameraRealm.name
         rec = this@toCameraRealm.rec
         room = this@toCameraRealm.room
+        favorites = this@toCameraRealm.favorites
         snapshot = this@toCameraRealm.snapshot
     }
 }

@@ -2,20 +2,19 @@
 
 package com.yotfr.testapp.ui.screens.cameras
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +24,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.yotfr.testapp.ui.screens.cameras.event.CamerasEvent
 import com.yotfr.testapp.ui.screens.cameras.model.CameraUi
+import de.charlex.compose.RevealDirection
+import de.charlex.compose.RevealSwipe
 
 @Composable
 fun CameraScreen(
@@ -48,7 +49,8 @@ fun CameraScreen(
             state?.rooms?.forEach {
                 item {
                     RoomHeader(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(
                                 top = 16.dp,
                                 start = 16.dp,
@@ -59,9 +61,17 @@ fun CameraScreen(
                 }
                 items(it.cameras) { camera ->
                     CameraItem(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(16.dp),
-                        camera = camera
+                        camera = camera,
+                        onFavorite = {
+                            viewModel.onEvent(
+                                CamerasEvent.FavoriteClicked(
+                                    camera = camera
+                                )
+                            )
+                        }
                     )
                 }
             }
@@ -74,26 +84,54 @@ fun CameraScreen(
     }
 }
 
+@SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun CameraItem(
     camera: CameraUi,
-    modifier: Modifier
+    modifier: Modifier,
+    onFavorite: () -> Unit
 ) {
-    Box(
-        modifier = modifier
+    RevealSwipe(
+        modifier = modifier,
+        directions = setOf(
+            RevealDirection.EndToStart
+        ),
+        backgroundCardEndColor = MaterialTheme.colorScheme.background,
+        hiddenContentEnd = {
+            IconButton(
+                onClick = onFavorite,
+                content = {
+                    Icon(
+                        imageVector = Icons.Outlined.Favorite,
+                        contentDescription = "delete action",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            )
+        }
     ) {
-        ElevatedCard(
+        Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp)
         ) {
-            AsyncImage(
-                modifier = Modifier.fillMaxWidth(),
-                model = camera.snapshot,
-                contentDescription = "camera",
-                contentScale = ContentScale.FillWidth
-            )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                AsyncImage(
+                    modifier = Modifier.fillMaxWidth(),
+                    model = camera.snapshot,
+                    contentDescription = "camera",
+                    contentScale = ContentScale.FillWidth
+                )
+                if (camera.isFavorite) {
+                    Icon(
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        imageVector = Icons.Outlined.Favorite,
+                        contentDescription = "favorite"
+                    )
+                }
+            }
             Text(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(16.dp),
                 text = camera.name
             )

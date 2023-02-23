@@ -56,6 +56,9 @@ dependencies {
     def nav_version = "2.5.3"
     def hilt_version = "2.44.1"
 
+    // SwipeToReveal
+    implementation 'de.charlex.compose:revealswipe:1.0.0'
+
     // Tabs pager
     implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"

@@ -12,3 +12,13 @@ fun DoorRealm.toDoorUi(): DoorUi {
         snapshot = this.snapshot
     )
 }
+
+fun DoorUi.toDoorRealm(): DoorRealm {
+    return DoorRealm().apply {
+        id = this@toDoorRealm.id
+        favorites = this@toDoorRealm.favorites
+        name = this@toDoorRealm.name
+        room = this@toDoorRealm.room
+        snapshot = this@toDoorRealm.snapshot
+    }
+}
