@@ -18,8 +18,13 @@ class DoorsRepositoryImpl @Inject constructor(
     override fun getDoorsData(forceUpdate: Boolean): Flow<Response<DoorsDataRealm>> {
         return doorsDao.getDoorsData()
             .map {
+                /*
+                 The task says to fetch data only if there is no data in the local DB
+                 or if the user refreshed the page (forceUpdate)
+                 */
                 if (it == null || forceUpdate) {
                     try {
+                        // Try to fetch data, replace local cache and response with Response.Success
                         val fetchedDoorsData = doorsApi.fetchDoors()
                         doorsDao.deleteDoorsData()
                         doorsDao.insertDoorsData(fetchedDoorsData.toDoorsDataRealm())
@@ -27,23 +32,33 @@ class DoorsRepositoryImpl @Inject constructor(
                             data = doorsDao.getDoorsData().first()
                         )
                     } catch (e: Exception) {
+                        /*
+                         Catch exceptions and response with Response.Exception with exception cause
+                         In the future, checking exceptions logic can be added
+                         (i.e. NoConnectionException)
+                         */
                         e.printStackTrace()
                         Response.Exception(
                             cause = Cause.UnknownException
                         )
                     }
                 } else {
+                    // Response with Response.Success if data in the local DB exists
                     Response.Success(
                         data = it
                     )
                 }
             }
             .onStart {
+                // Emit Response.Loading before collecting
                 emit(Response.Loading())
-            }.flowOn(Dispatchers.IO)
+            }
+            // Change thread
+            .flowOn(Dispatchers.IO)
     }
 
     override suspend fun updateDoor(doorRealm: DoorRealm) {
+        // Update camera (isFavorite field or name field)
         doorsDao.updateDoor(
             doorRealm = doorRealm
         )

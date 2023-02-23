@@ -7,10 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -20,11 +16,15 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.yotfr.testapp.R
 import com.yotfr.testapp.ui.screens.doors.event.DoorsEvent
 import com.yotfr.testapp.ui.screens.doors.model.DoorUi
 import de.charlex.compose.RevealDirection
@@ -73,14 +73,17 @@ fun DoorsScreen(
     Box(
         modifier = Modifier.pullRefresh(state = pullRefreshState)
     ) {
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth()
+                .padding(21.dp)
+        ) {
             state?.let {
                 items(it.doors) { door ->
                     DoorsItem(
                         door = door,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .padding(bottom = 12.dp),
                         onFavorite = {
                             viewModel.onEvent(
                                 event = DoorsEvent.FavoriteClicked(
@@ -91,7 +94,11 @@ fun DoorsScreen(
                         onEdit = {
                             showDialog = true
                             doorState = door
-                        }
+                        },
+                        lockIcon = painterResource(id = R.drawable.ic_lock),
+                        editIcon = painterResource(id = R.drawable.ic_edit),
+                        favoriteIcon = painterResource(id = R.drawable.ic_star),
+                        favoriteCamIcon = painterResource(id = R.drawable.ic_favorite)
                     )
                 }
             }
@@ -122,7 +129,10 @@ fun EditNameDialog(
             Box(
                 contentAlignment = Alignment.Center
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     TextField(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -140,7 +150,7 @@ fun EditNameDialog(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = { onOkPressed(textField.value, door) }) {
-                        Text(text = "Done")
+                        Text(text = "Change")
                     }
                 }
             }
@@ -153,7 +163,11 @@ fun DoorsItem(
     door: DoorUi,
     modifier: Modifier,
     onFavorite: () -> Unit,
-    onEdit: () -> Unit
+    onEdit: () -> Unit,
+    lockIcon: Painter,
+    editIcon: Painter,
+    favoriteIcon: Painter,
+    favoriteCamIcon: Painter
 ) {
     RevealSwipe(
         modifier = modifier,
@@ -161,14 +175,15 @@ fun DoorsItem(
             RevealDirection.EndToStart
         ),
         backgroundCardEndColor = MaterialTheme.colorScheme.background,
+        maxRevealDp = 108.dp,
         hiddenContentEnd = {
             IconButton(
                 onClick = onEdit,
                 content = {
                     Icon(
-                        imageVector = Icons.Outlined.Edit,
+                        painter = editIcon,
                         contentDescription = "edit action",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = Color.Unspecified
                     )
                 }
             )
@@ -176,9 +191,9 @@ fun DoorsItem(
                 onClick = onFavorite,
                 content = {
                     Icon(
-                        imageVector = Icons.Outlined.Favorite,
+                        painter = favoriteIcon,
                         contentDescription = "delete action",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = Color.Unspecified
                     )
                 }
             )
@@ -186,28 +201,47 @@ fun DoorsItem(
     ) {
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(8.dp),
+            elevation = CardDefaults.cardElevation(3.dp)
         ) {
             if (door.snapshot != null) {
-                AsyncImage(
-                    modifier = Modifier.fillMaxWidth(),
-                    model = door.snapshot,
-                    contentDescription = "camera",
-                    contentScale = ContentScale.FillWidth
-                )
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    AsyncImage(
+                        modifier = Modifier.fillMaxWidth(),
+                        model = door.snapshot,
+                        contentDescription = "camera",
+                        contentScale = ContentScale.FillWidth
+                    )
+                    if (door.favorites) {
+                        Icon(
+                            modifier = Modifier.align(Alignment.TopEnd)
+                                .padding(top = 8.dp, end = 8.dp),
+                            painter = favoriteCamIcon,
+                            contentDescription = "favorite",
+                            tint = Color.Unspecified
+                        )
+                    }
+                }
             }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .height(72.dp)
+                    .padding(
+                        start = 16.dp,
+                        end = 24.dp
+                    ),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
+                    fontSize = 17.sp,
                     text = door.name
                 )
                 Icon(
-                    imageVector = Icons.Outlined.Lock,
-                    contentDescription = "Lock state"
+                    painter = lockIcon,
+                    contentDescription = "Lock state",
+                    tint = Color.Unspecified
                 )
             }
         }

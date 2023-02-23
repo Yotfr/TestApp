@@ -7,6 +7,9 @@ import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+/**
+ * [DoorsDao] A class that performs CRUD operations on the database
+ */
 class DoorsDao(
     private val realm: Realm
 ) {

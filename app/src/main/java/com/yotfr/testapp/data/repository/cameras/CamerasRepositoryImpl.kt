@@ -9,6 +9,7 @@ import com.yotfr.testapp.data.util.Response
 import com.yotfr.testapp.data.util.toCamerasDataRealm
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CamerasRepositoryImpl @Inject constructor(
@@ -19,8 +20,13 @@ class CamerasRepositoryImpl @Inject constructor(
     override fun getCamerasData(forceUpdate: Boolean): Flow<Response<CamerasDataRealm>> {
         return camerasDao.getCamerasData()
             .map {
+                /*
+                 The task says to fetch data only if there is no data in the local DB
+                 or if the user refreshed the page (forceUpdate)
+                 */
                 if (it == null || forceUpdate) {
                     try {
+                        // Try to fetch data, replace local cache and response with Response.Success
                         val fetchedCameraData = camerasApi.fetchCameras()
                         camerasDao.deleteCamerasData()
                         camerasDao.insertCamerasData(fetchedCameraData.toCamerasDataRealm())
@@ -28,25 +34,37 @@ class CamerasRepositoryImpl @Inject constructor(
                             data = camerasDao.getCamerasData().first()
                         )
                     } catch (e: Exception) {
+                        /*
+                         Catch exceptions and response with Response.Exception with exception cause
+                         In the future, checking exceptions logic can be added
+                         (i.e. NoConnectionException)
+                         */
                         e.printStackTrace()
                         Response.Exception(
                             cause = Cause.UnknownException
                         )
                     }
                 } else {
+                    // Response with Response.Success if data in the local DB exists
                     Response.Success(
                         data = it
                     )
                 }
             }
             .onStart {
+                // Emit Response.Loading before collecting
                 emit(Response.Loading())
-            }.flowOn(Dispatchers.IO)
+            }
+            // Change thread
+            .flowOn(Dispatchers.IO)
     }
 
     override suspend fun updateCamera(cameraRealm: CameraRealm) {
-        camerasDao.updateCamera(
-            cameraRealm = cameraRealm
-        )
+        // Update camera (isFavorite field)
+        withContext(Dispatchers.IO) {
+            camerasDao.updateCamera(
+                cameraRealm = cameraRealm
+            )
+        }
     }
 }

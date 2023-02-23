@@ -8,8 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -18,10 +16,15 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.yotfr.testapp.R
 import com.yotfr.testapp.ui.screens.cameras.event.CamerasEvent
 import com.yotfr.testapp.ui.screens.cameras.model.CameraUi
 import de.charlex.compose.RevealDirection
@@ -45,17 +48,16 @@ fun CameraScreen(
     Box(
         modifier = Modifier.pullRefresh(state = pullRefreshState)
     ) {
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth()
+                .padding(21.dp)
+        ) {
             state?.rooms?.forEach {
                 item {
                     RoomHeader(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(
-                                top = 16.dp,
-                                start = 16.dp,
-                                end = 16.dp
-                            ),
+                            .padding(bottom = 12.dp),
                         roomName = it.name
                     )
                 }
@@ -63,7 +65,7 @@ fun CameraScreen(
                     CameraItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .padding(bottom = 12.dp),
                         camera = camera,
                         onFavorite = {
                             viewModel.onEvent(
@@ -71,7 +73,10 @@ fun CameraScreen(
                                     camera = camera
                                 )
                             )
-                        }
+                        },
+                        favoriteIcon = painterResource(id = R.drawable.ic_star),
+                        favoriteCamIcon = painterResource(id = R.drawable.ic_favorite),
+                        recIcon = painterResource(id = R.drawable.ic_rec)
                     )
                 }
             }
@@ -89,7 +94,10 @@ fun CameraScreen(
 fun CameraItem(
     camera: CameraUi,
     modifier: Modifier,
-    onFavorite: () -> Unit
+    onFavorite: () -> Unit,
+    recIcon: Painter,
+    favoriteCamIcon: Painter,
+    favoriteIcon: Painter
 ) {
     RevealSwipe(
         modifier = modifier,
@@ -102,17 +110,18 @@ fun CameraItem(
                 onClick = onFavorite,
                 content = {
                     Icon(
-                        imageVector = Icons.Outlined.Favorite,
+                        painter = favoriteIcon,
                         contentDescription = "delete action",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = Color.Unspecified
                     )
                 }
             )
         }
     ) {
-        Card(
+        ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(8.dp),
+            elevation = CardDefaults.cardElevation(3.dp)
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 AsyncImage(
@@ -123,18 +132,38 @@ fun CameraItem(
                 )
                 if (camera.isFavorite) {
                     Icon(
-                        modifier = Modifier.align(Alignment.TopEnd),
-                        imageVector = Icons.Outlined.Favorite,
-                        contentDescription = "favorite"
+                        modifier = Modifier.align(Alignment.TopEnd)
+                            .padding(top = 8.dp, end = 8.dp),
+                        painter = favoriteCamIcon,
+                        contentDescription = "favorite",
+                        tint = Color.Unspecified
+                    )
+                }
+                if (camera.rec) {
+                    Icon(
+                        modifier = Modifier.align(Alignment.TopStart)
+                            .padding(top = 8.dp, start = 8.dp),
+                        painter = recIcon,
+                        contentDescription = "rec",
+                        tint = Color.Unspecified
                     )
                 }
             }
-            Text(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                text = camera.name
-            )
+                    .height(72.dp)
+                    .padding(
+                        start = 16.dp,
+                        end = 24.dp
+                    ),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    fontSize = 17.sp,
+                    text = camera.name
+                )
+            }
         }
     }
 }
@@ -149,7 +178,8 @@ fun RoomHeader(
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = roomName
+            text = roomName,
+            fontSize = 21.sp
         )
     }
 }

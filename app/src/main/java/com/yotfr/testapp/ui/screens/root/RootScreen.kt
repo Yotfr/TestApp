@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.*
 import com.yotfr.testapp.ui.navigation.TabScreens
 
@@ -47,7 +48,10 @@ fun RootScreen() {
 fun TopBar() {
     CenterAlignedTopAppBar(
         title = {
-            Text(text = "My home")
+            Text(
+                text = "My home",
+                fontSize = 21.sp
+            )
         }
     )
 }
@@ -68,7 +72,10 @@ fun Tabs(tabs: List<TabScreens>, selectedIndex: Int, onTabClicked: (index: Int) 
         tabs.forEachIndexed { index, tabScreens ->
             Tab(
                 text = {
-                    Text(text = tabScreens.title)
+                    Text(
+                        text = tabScreens.title,
+                        fontSize = 17.sp
+                    )
                 },
                 selected = selectedIndex == index,
                 onClick = {
