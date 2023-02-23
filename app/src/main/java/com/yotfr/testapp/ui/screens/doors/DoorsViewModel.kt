@@ -1,10 +1,10 @@
 package com.yotfr.testapp.ui.screens.doors
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yotfr.testapp.data.datasource.local.model.doors.DoorsDataRealm
 import com.yotfr.testapp.data.repository.doors.DoorsRepository
 import com.yotfr.testapp.data.util.Response
 import com.yotfr.testapp.ui.screens.doors.event.DoorsEvent
@@ -33,26 +33,15 @@ class DoorsViewModel @Inject constructor(
                 doorsRepository.getDoorsData(
                     forceUpdate = it
                 ).collectLatest { response ->
-                    Log.d("TESTTT", "response -> $response")
                     when (response) {
                         is Response.Loading -> {
-                            _state.value = _state.value?.copy(
-                                isLoading = true
-                            )
+                            processLoadingState()
                         }
                         is Response.Success -> {
-                            Log.d("TESTTT", "response data -> ${response.data}")
-                            _state.value = _state.value?.copy(
-                                isLoading = false,
-                                doors = response.data?.doorRealms?.map { it.toDoorUi() } ?: emptyList()
-                            )
-                            _isForceUpdating.value = false
+                            processSuccessState(response)
                         }
                         is Response.Exception -> {
-                            _state.value = _state.value?.copy(
-                                isLoading = false
-                            )
-                            _isForceUpdating.value = false
+                            processExceptionState()
                         }
                     }
                 }
@@ -86,5 +75,26 @@ class DoorsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun processExceptionState() {
+        _state.value = _state.value?.copy(
+            isLoading = false
+        )
+        _isForceUpdating.value = false
+    }
+
+    private fun processSuccessState(response: Response<DoorsDataRealm>) {
+        _state.value = _state.value?.copy(
+            isLoading = false,
+            doors = response.data?.doorRealms?.map { it.toDoorUi() } ?: emptyList()
+        )
+        _isForceUpdating.value = false
+    }
+
+    private fun processLoadingState() {
+        _state.value = _state.value?.copy(
+            isLoading = true
+        )
     }
 }

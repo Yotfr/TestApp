@@ -1,10 +1,10 @@
 package com.yotfr.testapp.ui.screens.cameras
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yotfr.testapp.data.datasource.local.model.cameras.CamerasDataRealm
 import com.yotfr.testapp.data.repository.cameras.CamerasRepository
 import com.yotfr.testapp.data.util.Response
 import com.yotfr.testapp.ui.screens.cameras.event.CamerasEvent
@@ -33,28 +33,15 @@ class CamerasViewModel @Inject constructor(
                 camerasRepository.getCamerasData(
                     forceUpdate = _isForceUpdating.value
                 ).collect { response ->
-                    Log.d("TESTRESPONSE", "response -> $response")
                     when (response) {
                         is Response.Loading -> {
-                            _state.value = _state.value?.copy(
-                                isLoading = true
-                            )
+                            processLoadingState()
                         }
                         is Response.Success -> {
-                            _state.value = _state.value?.copy(
-                                isLoading = false,
-                                rooms = response.data?.toRooms() ?: throw IllegalArgumentException(
-                                    "data cannot be null if response is Response.Success"
-                                )
-                            )
-                            _isForceUpdating.value = false
+                            processSuccessState(response)
                         }
                         is Response.Exception -> {
-                            Log.d("TEST", "error")
-                            _state.value = _state.value?.copy(
-                                isLoading = false
-                            )
-                            _isForceUpdating.value = false
+                            processExceptionState()
                         }
                     }
                 }
@@ -77,5 +64,28 @@ class CamerasViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun processExceptionState() {
+        _state.value = _state.value?.copy(
+            isLoading = false
+        )
+        _isForceUpdating.value = false
+    }
+
+    private fun processSuccessState(response: Response<CamerasDataRealm>) {
+        _state.value = _state.value?.copy(
+            isLoading = false,
+            rooms = response.data?.toRooms() ?: throw IllegalArgumentException(
+                "data cannot be null if response is Response.Success"
+            )
+        )
+        _isForceUpdating.value = false
+    }
+
+    private fun processLoadingState() {
+        _state.value = _state.value?.copy(
+            isLoading = true
+        )
     }
 }

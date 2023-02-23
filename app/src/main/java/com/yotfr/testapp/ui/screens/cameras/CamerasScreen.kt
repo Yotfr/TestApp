@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -60,10 +61,10 @@ fun CameraScreen(
                             .padding(
                                 bottom = MaterialTheme.spacing.medium
                             ),
-                        roomName = it.name
+                        roomName = it.key ?: stringResource(id = R.string.other_cameras)
                     )
                 }
-                items(it.cameras) { camera ->
+                items(it.value) { camera ->
                     CameraItem(
                         modifier = Modifier
                             .fillMaxWidth()

@@ -55,6 +55,7 @@ dependencies {
     def compose_version = "1.3.3"
     def nav_version = "2.5.3"
     def hilt_version = "2.44.1"
+    def retrofit_version = "2.9.0"
 
     // Tabs pager
     implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
@@ -79,8 +80,8 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
     implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3"
 
     // SwipeToReveal
