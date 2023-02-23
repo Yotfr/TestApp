@@ -6,9 +6,9 @@ import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
 
-class CamerasData : RealmObject {
+class CamerasDataRealm : RealmObject {
     @PrimaryKey
     var id: ObjectId = ObjectId.invoke()
-    var cameras: RealmList<Camera> = realmListOf()
+    var cameraRealms: RealmList<CameraRealm> = realmListOf()
     var room: RealmList<String> = realmListOf()
 }

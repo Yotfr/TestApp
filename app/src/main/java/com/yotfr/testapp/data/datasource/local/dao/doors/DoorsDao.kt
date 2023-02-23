@@ -1,25 +1,24 @@
 package com.yotfr.testapp.data.datasource.local.dao.doors
 
-import com.yotfr.testapp.data.datasource.local.model.doors.DoorsData
+import com.yotfr.testapp.data.datasource.local.model.doors.DoorsDataRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class DoorsDao @Inject constructor(
+class DoorsDao(
     private val realm: Realm
 ) {
-    suspend fun insertDoorsData(doorsData: DoorsData) {
-        realm.write { copyToRealm(doorsData) }
+    suspend fun insertDoorsData(doorsDataRealm: DoorsDataRealm) {
+        realm.write { copyToRealm(doorsDataRealm) }
     }
-    suspend fun deleteDoorsData(doorsData: DoorsData) {
+    suspend fun deleteDoorsData() {
         realm.write {
-            val camerasDataQuery = query<DoorsData>().find()
+            val camerasDataQuery = query<DoorsDataRealm>().find()
             delete(camerasDataQuery)
         }
     }
-    fun getCamerasData(): Flow<List<DoorsData>> {
-        return realm.query<DoorsData>().asFlow().map { it.list }
+    fun getDoorsData(): Flow<DoorsDataRealm> {
+        return realm.query<DoorsDataRealm>().asFlow().map { it.list.first() }
     }
 }

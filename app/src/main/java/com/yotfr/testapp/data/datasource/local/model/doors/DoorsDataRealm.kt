@@ -6,8 +6,8 @@ import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
 
-class DoorsData : RealmObject {
+class DoorsDataRealm : RealmObject {
     @PrimaryKey
     var id: ObjectId = ObjectId.invoke()
-    var doors: RealmList<Door> = realmListOf()
+    var doorRealms: RealmList<DoorRealm> = realmListOf()
 }
