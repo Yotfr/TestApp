@@ -5,5 +5,6 @@ data class DoorUi(
     val favorites: Boolean,
     val name: String,
     val room: String?,
-    val snapshot: String?
+    val snapshot: String?,
+    val isOpen: Boolean
 )

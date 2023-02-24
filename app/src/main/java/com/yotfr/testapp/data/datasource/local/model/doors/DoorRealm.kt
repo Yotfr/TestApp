@@ -10,4 +10,5 @@ class DoorRealm : RealmObject {
     var name: String = ""
     var room: String? = null
     var snapshot: String? = null
+    var isOpen: Boolean = false
 }

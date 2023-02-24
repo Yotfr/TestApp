@@ -74,6 +74,15 @@ class DoorsViewModel @Inject constructor(
                     )
                 }
             }
+            is DoorsEvent.LockClicked -> {
+                viewModelScope.launch {
+                    doorsRepository.updateDoor(
+                        doorRealm = event.door.copy(
+                            isOpen = !event.door.isOpen
+                        ).toDoorRealm()
+                    )
+                }
+            }
         }
     }
 

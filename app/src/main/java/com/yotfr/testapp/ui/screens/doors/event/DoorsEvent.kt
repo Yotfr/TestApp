@@ -6,4 +6,5 @@ sealed interface DoorsEvent {
     object Swiped : DoorsEvent
     data class FavoriteClicked(val door: DoorUi) : DoorsEvent
     data class EditNameClicked(val door: DoorUi, val newName: String) : DoorsEvent
+    data class LockClicked(val door: DoorUi): DoorsEvent
 }

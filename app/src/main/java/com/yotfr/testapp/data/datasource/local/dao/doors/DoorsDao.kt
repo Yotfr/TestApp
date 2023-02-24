@@ -30,6 +30,7 @@ class DoorsDao(
             val door = query<DoorRealm>(query = "id == $0", doorRealm.id).first().find()
             door?.favorites = doorRealm.favorites
             door?.name = doorRealm.name
+            door?.isOpen = doorRealm.isOpen
         }
     }
 

@@ -9,7 +9,8 @@ fun DoorRealm.toDoorUi(): DoorUi {
         favorites = this.favorites,
         name = this.name,
         room = this.room,
-        snapshot = this.snapshot
+        snapshot = this.snapshot,
+        isOpen = this.isOpen
     )
 }
 
@@ -20,5 +21,6 @@ fun DoorUi.toDoorRealm(): DoorRealm {
         name = this@toDoorRealm.name
         room = this@toDoorRealm.room
         snapshot = this@toDoorRealm.snapshot
+        isOpen = this@toDoorRealm.isOpen
     }
 }

@@ -101,7 +101,15 @@ fun DoorsScreen(
                         lockIcon = painterResource(id = R.drawable.ic_lock),
                         editIcon = painterResource(id = R.drawable.ic_edit),
                         favoriteIcon = painterResource(id = R.drawable.ic_star),
-                        favoriteCamIcon = painterResource(id = R.drawable.ic_favorite)
+                        favoriteCamIcon = painterResource(id = R.drawable.ic_favorite),
+                        unlockedLockIcon = painterResource(id = R.drawable.ic_lock_unlocked),
+                        onLockClicked = {
+                            viewModel.onEvent(
+                                DoorsEvent.LockClicked(
+                                    door = door
+                                )
+                            )
+                        }
                     )
                 }
             }
@@ -168,6 +176,8 @@ fun DoorsItem(
     onFavorite: () -> Unit,
     onEdit: () -> Unit,
     lockIcon: Painter,
+    unlockedLockIcon: Painter,
+    onLockClicked: () -> Unit,
     editIcon: Painter,
     favoriteIcon: Painter,
     favoriteCamIcon: Painter
@@ -247,10 +257,15 @@ fun DoorsItem(
                     style = MaterialTheme.typography.titleMedium,
                     text = door.name
                 )
-                Icon(
-                    painter = lockIcon,
-                    contentDescription = "Lock state",
-                    tint = Color.Unspecified
+                IconButton(
+                    onClick = onLockClicked,
+                    content = {
+                        Icon(
+                            painter = if (door.isOpen) unlockedLockIcon else lockIcon,
+                            contentDescription = "Lock state",
+                            tint = Color.Unspecified
+                        )
+                    }
                 )
             }
         }
